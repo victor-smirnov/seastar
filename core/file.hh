@@ -119,7 +119,7 @@ public:
     virtual future<> allocate(uint64_t position, uint64_t length) = 0;
     virtual future<uint64_t> size(void) = 0;
     virtual future<> close() = 0;
-    virtual subscription<directory_entry> list_directory(std::function<future<> (directory_entry de)> next) = 0;
+    virtual seastar::subscription<directory_entry> list_directory(std::function<future<> (directory_entry de)> next) = 0;
 
     friend class reactor;
 };
@@ -376,7 +376,7 @@ public:
     }
 
     /// Returns a directory listing, given that this file object is a directory.
-    subscription<directory_entry> list_directory(std::function<future<> (directory_entry de)> next) {
+    seastar::subscription<directory_entry> list_directory(std::function<future<> (directory_entry de)> next) {
         return _file_impl->list_directory(std::move(next));
     }
 

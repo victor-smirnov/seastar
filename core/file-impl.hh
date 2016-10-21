@@ -40,7 +40,7 @@ public:
     virtual future<> allocate(uint64_t position, uint64_t length) override;
     future<uint64_t> size();
     virtual future<> close() noexcept override;
-    virtual subscription<directory_entry> list_directory(std::function<future<> (directory_entry de)> next) override;
+    virtual seastar::subscription<directory_entry> list_directory(std::function<future<> (directory_entry de)> next) override;
 private:
     void query_dma_alignment();
 };

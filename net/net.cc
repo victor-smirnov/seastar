@@ -246,7 +246,7 @@ void qp::build_sw_reta(const std::map<unsigned, float>& cpu_weights) {
     _sw_reta = reta;
 }
 
-subscription<packet>
+seastar::subscription<packet>
 device::receive(std::function<future<> (packet)> next_packet) {
     auto sub = _queues[engine().cpu_id()]->_rx_stream.listen(std::move(next_packet));
     _queues[engine().cpu_id()]->rx_start();
@@ -265,7 +265,7 @@ l3_protocol::l3_protocol(interface* netif, eth_protocol_num proto_num, packet_pr
         _netif->register_packet_provider(std::move(func));
 }
 
-subscription<packet, ethernet_address> l3_protocol::receive(
+seastar::subscription<packet, ethernet_address> l3_protocol::receive(
         std::function<future<> (packet p, ethernet_address from)> rx_fn,
         std::function<bool (forward_hash&, packet&, size_t)> forward) {
     return _netif->register_l3(_proto_num, std::move(rx_fn), std::move(forward));
@@ -297,7 +297,7 @@ interface::interface(std::shared_ptr<device> dev)
         });
 }
 
-subscription<packet, ethernet_address>
+seastar::subscription<packet, ethernet_address>
 interface::register_l3(eth_protocol_num proto_num,
         std::function<future<> (packet p, ethernet_address from)> next,
         std::function<bool (forward_hash&, packet& p, size_t)> forward) {
